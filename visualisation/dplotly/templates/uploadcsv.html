@@ -1,0 +1,31 @@
+{% extends 'home.html' %}
+    {% block tittle %}
+        <title>Upload CSV</title>
+    {% endblock %}
+    {% block content %}
+    <div class="container-md">
+        <div class="alert alert-success" role="alert">
+            {{alart}}
+        </div>
+        <form id="post-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <select name="select" id="" class="form-select" aria-label="Default select example">
+                <option selected>Select Cryptocurrency</option>
+                <option value="Bitcoin">Bitcoin</option>
+                <option value="Ethereum">Ethereum</option>
+                <option value="Binance">Binance</option>
+            </select>
+            <input type="file" name="myfile" required id="id_myfile" class="form-control form-control-lg">
+            <br>
+            {% if user.is_staff %}
+                <input type="submit" value="upload" class="btn btn-primary mb-3">
+            {% else %}
+                <div class="alert alert-danger" role="alert">
+                    You are not allowed to upload!
+                </div>
+            {% endif %}
+            <br>
+            <a href="{% url 'home' %}" class="btn btn-primary" >Home</a>
+        </form>
+    </div>
+    {% endblock %}
