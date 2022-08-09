@@ -4,11 +4,71 @@ from django.shortcuts import render
 import csv
 from .forms import csvForm
 from datetime import datetime
+import plotly.express as px
+import pandas as pd
+import numpy as np
 
-# Create your views here.
+def NumpyArrary(database):
+    Date    = [c.Date for c in database]
+    Open    = [c.Open for c in database]
+    High    = [c.High for c in database]
+    Low     = [c.Low for c in database]
+    Close   = [c.Close for c in database]
+    AdjClose= [c.AdjClose for c in database]
+    Volume  = [c.Volume for c in database]
+
+    return np.array([Date, Open, High, Low, Close, AdjClose, Volume])
+
+def CreateDataFrame(array, columns):
+    df = pd.DataFrame(array, columns)
+    return df.transpose()
+
 def Home(request):
+    btc = BTC.objects.all()
+    eth = ETH.objects.all()
+    bnb = BNB.objects.all()
+    if request.method == 'POST':
+        if str(request.POST['select']) == 'Bitcoin':
+            df = CreateDataFrame(NumpyArrary(btc), ['Date', 'Open', 'High', 'Low', 'Close', 'AdjClose', 'Volume'])
+            alart = 'Bitcoin'
+        if str(request.POST['select']) == 'Ethereum':
+            df = CreateDataFrame(NumpyArrary(btc), ['Date', 'Open', 'High', 'Low', 'Close', 'AdjClose', 'Volume'])
+            alart = 'Ethereum'
+        if str(request.POST['select']) == 'Binance':
+            df = CreateDataFrame(NumpyArrary(btc), ['Date', 'Open', 'High', 'Low', 'Close', 'AdjClose', 'Volume'])
+            alart = 'Binance'
+    else:
+         df = CreateDataFrame(NumpyArrary(btc), ['Date', 'Open', 'High', 'Low', 'Close', 'AdjClose', 'Volume'])
+         alart = 'Bitcoin'
+    fig = px.scatter(
+        df,
+        x='Date',
+        y=['Open', 'High', 'Low', 'Close', 'AdjClose'],
+        title='Cryptocurrency Line Plot'
+    )
+    scatterchart = fig.to_html()
+    fig = px.box(
+        df,
+        x='Date',
+        y=['Open', 'High', 'Low', 'Close', 'AdjClose'],
+        title='Cryptocurrency Scatter Plot'
+    )
+    boxchart = fig.to_html()
+    fig = px.line(
+        df,
+        x='Date',
+        y=['Open', 'High', 'Low', 'Close', 'AdjClose'],
+        title='Cryptocurrency Scatter Plot'
+    )
+    chart = fig.to_html()
 
-    return render(request, 'home.html')
+    context = {
+        'chart':chart,
+        'scatterchart':scatterchart,
+        'boxchart':boxchart,
+        'alart':alart
+    }
+    return render(request, 'home.html', context)
 
 def UploadCSV(request):
     form = csvForm()
