@@ -18,7 +18,9 @@
             <input type="file" name="myfile" required id="id_myfile" class="form-control form-control-lg">
             <br>
             {% if user.is_staff %}
-                <input type="submit" value="upload" class="btn btn-primary mb-3">
+            <div class="d-grid gap-2">
+                <input type="submit" value="upload" class="btn btn-primary">
+            </div>
             {% else %}
                 <div class="alert alert-danger" role="alert">
                     You are not allowed to upload!
@@ -26,6 +28,5 @@
             {% endif %}
             <br>
         </form>
-        <a href="{% url 'home' %}" class="btn btn-primary" >Home</a>
     </div>
     {% endblock %}

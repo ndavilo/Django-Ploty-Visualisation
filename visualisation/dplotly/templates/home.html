@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,11 +6,63 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href='{% static "css/navbar.css" %}'>
     {% block tittle %}
         <title>Home</title>
     {% endblock %}
 </head>
+<body>
+    <div class="wrapper">
+        <ul class= "menu">
+            <li class="list-item">
+                <a class="home fa fa-home fa-fw" href="{% url 'home' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-house-heart-fill" viewBox="0 0 16 16">
+                        <path d="M7.293 1.5a1 1 0 0 1 1.414 0L11 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l2.354 2.353a.5.5 0 0 1-.708.707L8 2.207 1.354 8.853a.5.5 0 1 1-.708-.707L7.293 1.5Z"/>
+                        <path d="m14 9.293-6-6-6 6V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V9.293Zm-6-.811c1.664-1.673 5.825 1.254 0 5.018-5.825-3.764-1.664-6.691 0-5.018Z"/>
+                    </svg>
+                    <span>
+                        Home
+                    </span>
+                </a>
+            </li>
+            {% if user.is_staff %}
+            <li class= "list-item">
+                <a class= "upload fa fa-info fa-fw" href="{% url 'uploadcsv' %}">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-camera-fill" viewBox="0 0 16 16">
+                        <path d="M10.5 8.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path d="M2 4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-1.172a2 2 0 0 1-1.414-.586l-.828-.828A2 2 0 0 0 9.172 2H6.828a2 2 0 0 0-1.414.586l-.828.828A2 2 0 0 1 3.172 4H2zm.5 2a.5.5 0 1 1 0-1 .5.5 0 0 1 0 1zm9 2.5a3.5 3.5 0 1 1-7 0 3.5 3.5 0 0 1 7 0z"/>
+                      </svg>
+                    <span>Upload CSV</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class= "list-item">
+                <a class= "contact fa fa-envelope fa-wf" href="#">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-telephone-forward-fill" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M1.885.511a1.745 1.745 0 0 1 2.61.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.678.678 0 0 0 .178.643l2.457 2.457a.678.678 0 0 0 .644.178l2.189-.547a1.745 1.745 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.634 18.634 0 0 1-7.01-4.42 18.634 18.634 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877L1.885.511zm10.761.135a.5.5 0 0 1 .708 0l2.5 2.5a.5.5 0 0 1 0 .708l-2.5 2.5a.5.5 0 0 1-.708-.708L14.293 4H9.5a.5.5 0 0 1 0-1h4.793l-1.647-1.646a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                    <span>About & Contact</span>
+                </a>
+            </li>
+        </ul>
+    </div>
     {% block content %}
+    <div class="container-md">
+        <br>
+        {{mainchart|safe}}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+              <div class="card">
+                <span class="card-img-top">{{heat|safe}}</span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                  <span class="card-img-top">{{gscatter_matrix|safe}}</span>
+              </div>
+            </div>
+        </div>
+    </div>
     <div class="container-md">
         <br>
         <div class="alert alert-success" role="alert">
@@ -25,15 +78,70 @@
                 <option value="Binance">Binance</option>
             </select>
             <br>
-            <input type="submit" value="Plot" class="btn btn-primary mb-3">
+            <div class="d-grid gap-2">
+                <input type="submit" value="Plot" class="btn btn-primary">
+            </div>
             <br>
         </form>
-        {% if user.is_staff %}
-            <a href="{% url 'uploadcsv' %}" class="btn btn-danger" >Upload csv</a>
-        {% endif %}
-        {{chart|safe}}
-        {{scatterchart|safe}}
-        {{boxchart|safe}}
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+              <div class="card">
+                <span class="card-img-top">{{chart|safe}}</span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                  <span class="card-img-top">{{scatterchart|safe}}</span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <span class="card-img-top">{{boxchart|safe}}</span>
+              </div>
+            </div>
+            <div class="col">
+              <div class="card">
+                <span class="card-img-top">{{candle|safe}}</span>
+              </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                  <span class="card-img-top">{{bar|safe}}</span>
+                </div>
+              </div>
+              <div class="col">
+                <div class="card">
+                  <span class="card-img-top">{{scatter_matrix|safe}}</span>
+                </div>
+              </div>
+          </div>
+          <br><br>
+        <table class="table table-success table-striped">
+            <thead>
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Open</th>
+                  <th scope="col">High</th>
+                  <th scope="col">Low</th>
+                  <th scope="col">Close</th>
+                  <th scope="col">AdjClose</th>
+                  <th scope="col">Volume</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for Date, Open, High, Low, Close, AdjClose, Volume in numpy %}
+                <tr>
+                  <th scope="row">{{Date}}</th>
+                  <td>{{Open}}</td>
+                  <td>{{High}}</td>
+                  <td>{{Low}}</td>
+                  <td>{{Close}}</td>
+                  <td>{{AdjClose}}</td>
+                  <td>{{Volume}}</td>
+                </tr>
+                {%endfor%}
+            </tbody>
+        </table>
     </div>
     {% endblock %}
 </body>
