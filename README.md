@@ -17,7 +17,8 @@ pip install the following librarys into to Virtual env
     Django
     django-extensions
     plotly
-    django psycopg2
+    django-psycopg2
+    django-decouple
 
 Create Project:
     django-admin startproject visualisation
